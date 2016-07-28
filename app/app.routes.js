@@ -23,6 +23,6 @@ var routes = [
     }
 ];
 exports.appRouterProviders = [
-    router_1.provideRouter(routes)];
-;
+    router_1.provideRouter(routes)
+];
 //# sourceMappingURL=app.routes.js.map

@@ -8,21 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+require('rxjs/add/operator/toPromise');
 var core_1 = require('@angular/core');
-var mock_heroes_1 = require('./mock-heroes');
+var http_1 = require('@angular/http');
 var HeroService = (function () {
-    function HeroService() {
+    function HeroService(http) {
+        this.http = http;
+        this.heroesUrl = 'app/heroes'; // URL to web api
     }
     HeroService.prototype.getHeroes = function () {
-        return Promise.resolve(mock_heroes_1.HEROES);
+        return this.http.get(this.heroesUrl)
+            .toPromise()
+            .then(function (response) { return response.json().data; })
+            .catch(this.handleError);
     };
     HeroService.prototype.getHero = function (id) {
         return this.getHeroes()
             .then(function (heroes) { return heroes.find(function (hero) { return hero.id === id; }); });
     };
+    HeroService.prototype.handleError = function (error) {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
+    };
     HeroService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], HeroService);
     return HeroService;
 }());
